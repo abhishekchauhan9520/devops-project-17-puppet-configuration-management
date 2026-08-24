@@ -1,0 +1,2 @@
+--no-variable_scope-check
+--only-checks 80;100
