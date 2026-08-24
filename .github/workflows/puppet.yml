@@ -1,0 +1,26 @@
+name: Puppet Validation
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Puppet tooling
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ruby ruby-dev build-essential
+          sudo gem install puppet puppet-lint
+
+      - name: Validate Puppet syntax
+        run: puppet parser validate manifests/site.pp modules/*/manifests/*.pp
+
+      - name: Run puppet-lint
+        run: puppet-lint --config .puppet-lint.rc modules
+
+      - name: Run repository checks
+        run: bash tests/validate_structure.sh
